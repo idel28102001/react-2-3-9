@@ -1,0 +1,31 @@
+.filters__item {
+  display: inline;
+  cursor: default;
+}
+
+.filters__label {
+  display: inline-block;
+  color: inherit;
+  margin: 3px;
+  padding: 3px 7px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+}
+
+.filters__radio:not(:checked) + label {
+  cursor: pointer;
+}
+
+.filters__radio {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.filters__item:hover .filters__label {
+  border-color: rgba(175, 47, 47, 0.1);
+}
+
+.filters__radio:checked + .filters__label {
+  border-color: rgba(175, 47, 47, 0.2);
+}
