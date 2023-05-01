@@ -1,5 +1,5 @@
 import './TaskList.css';
-import React from 'react';
+import React, { FC } from 'react';
 
 import Task from '../Task';
 import { RefactorTaskMethods } from '../Task/Task';
@@ -10,16 +10,15 @@ interface TaskListPropsInterface {
   refactorFunctions: RefactorTaskMethods;
 }
 
-export default class TaskList extends React.Component<TaskListPropsInterface, unknown> {
-  render() {
-    return (
-      <ul className="todo-list">
-        {this.props.tasks.map((task) => (
-          <li key={task.id}>
-            <Task refactorFunctions={this.props.refactorFunctions} task={task} />
-          </li>
-        ))}
-      </ul>
-    );
-  }
-}
+const TaskList: FC<TaskListPropsInterface> = ({ tasks, refactorFunctions }) => {
+  return (
+    <ul className="todo-list">
+      {tasks.map((task) => (
+        <li key={task.id}>
+          <Task refactorFunctions={refactorFunctions} task={task} />
+        </li>
+      ))}
+    </ul>
+  );
+};
+export default TaskList;

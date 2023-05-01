@@ -1,8 +1,6 @@
 import './Timer.css';
-import React from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { differenceInMilliseconds, format } from 'date-fns';
-
-export type setCurrTime = (id: number, currTime: number) => void;
 
 export interface TimerInterface {
   startDiapason: Date;
@@ -18,50 +16,46 @@ interface TimerProps {
   timer: TimerInterface;
 }
 
-export default class Timer extends React.Component<TimerProps, unknown> {
-  interval = -1 as never as NodeJS.Timer;
-
-  componentDidMount() {
-    this.turnTimerOn();
-  }
-
-  turnTimerOn(isInit = true) {
-    if (!this.props.timer.isStopped && !isInit) return;
-    if (!isInit) {
-      this.props.updateTimer(this.props.id, { ...this.props.timer, isStopped: false });
-    }
-
-    clearInterval(this.interval);
-    this.interval = setInterval(() => {
-      this.forceUpdate();
-    }, 1000);
-  }
-
-  turnTimerOff(isInit = true) {
-    if (this.props.timer.isStopped && !isInit) return;
-    if (!isInit) {
-      this.props.updateTimer(this.props.id, { ...this.props.timer, isStopped: true });
-    }
-    clearInterval(this.interval);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  calculateTimer() {
-    const { startDiapason, diffInMS, isStopped } = this.props.timer;
+const Timer: FC<TimerProps> = ({ timer, updateTimer, id }) => {
+  const ref = useRef(-1 as never as NodeJS.Timer);
+  const calculateTimer = (timer: TimerInterface) => {
+    const { startDiapason, diffInMS, isStopped } = timer;
     const diapason = isStopped ? diffInMS : differenceInMilliseconds(new Date(), startDiapason);
     return format(new Date(diapason), 'mm:ss');
-  }
+  };
+  const [currentTime, setCurrentTime] = useState(calculateTimer(timer));
+  const turnTimerOn = (timer: TimerInterface, isInit = true) => {
+    if (!timer.isStopped && !isInit) return;
+    if (!isInit) {
+      updateTimer(id, { ...timer, isStopped: false });
+    }
 
-  render() {
-    return (
-      <span className="description">
-        <button className="icon icon-play" onClick={() => this.turnTimerOn(false)} />
-        <button className="icon icon-pause" onClick={() => this.turnTimerOff(false)} />
-        {this.calculateTimer()}
-      </span>
-    );
-  }
-}
+    clearInterval(ref.current);
+    ref.current = setInterval(() => {
+      setCurrentTime(() => calculateTimer(timer));
+    }, 1000);
+  };
+
+  const turnTimerOff = (timer: TimerInterface, isInit = true) => {
+    if (timer.isStopped && !isInit) return;
+    if (!isInit) {
+      updateTimer(id, { ...timer, isStopped: true });
+    }
+    clearInterval(ref.current);
+  };
+  useEffect(() => {
+    turnTimerOn(timer);
+    return () => {
+      clearInterval(ref.current);
+    };
+  }, [timer]);
+
+  return (
+    <span className="description">
+      <button className="icon icon-play" onClick={() => turnTimerOn(timer, false)} />
+      <button className="icon icon-pause" onClick={() => turnTimerOff(timer, false)} />
+      {currentTime}
+    </span>
+  );
+};
+export default Timer;

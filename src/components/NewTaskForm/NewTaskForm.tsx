@@ -1,5 +1,5 @@
 import './NewTaskForm.css';
-import React, { createRef } from 'react';
+import React, { FC, useCallback, useRef } from 'react';
 
 import CreateTask, { TaskPropsInterface } from '../../common/createTask';
 
@@ -9,32 +9,24 @@ interface NewTaskFormPropsInterface {
   addTask: AddTaskType;
 }
 
-export default class NewTaskForm extends React.Component<NewTaskFormPropsInterface, unknown> {
-  ref: React.RefObject<HTMLInputElement>;
-
-  constructor(props: NewTaskFormPropsInterface) {
-    super(props);
-    this.ref = createRef<HTMLInputElement>();
-  }
-
-  addTask = (e: React.FormEvent<HTMLFormElement>) => {
+const NewTaskForm: FC<NewTaskFormPropsInterface> = ({ addTask }) => {
+  const ref = useRef<HTMLInputElement>(null);
+  const addTaskFunc = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (this.ref.current) {
-      const current = this.ref.current;
+    if (ref.current) {
+      const current = ref.current;
       if (current.value.trim()) {
         const newTask: TaskPropsInterface = CreateTask(current.value);
-        this.props.addTask(newTask);
+        addTask(newTask);
         current.value = '';
       }
     }
-  };
-
-  render() {
-    return (
-      <form onSubmit={this.addTask}>
-        <input ref={this.ref} className="new-todo" placeholder="What needs to be done?" autoFocus />
-        <input type="submit" className="new-todo-submit" />
-      </form>
-    );
-  }
-}
+  }, []);
+  return (
+    <form onSubmit={addTaskFunc}>
+      <input ref={ref} className="new-todo" placeholder="What needs to be done?" autoFocus />
+      <input type="submit" className="new-todo-submit" />
+    </form>
+  );
+};
+export default NewTaskForm;

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import './App.css';
 import TodoApp from '../components/TodoApp';
 import { TaskFilterFlags, TaskFilters } from '../components/TasksFilterItem/TasksFilterItem';
 
-export default class App extends React.Component<unknown, unknown> {
-  filters: Array<TaskFilters> = [
+const App: FC = () => {
+  const filters: Array<TaskFilters> = [
     { value: TaskFilterFlags.ALL, checked: true, label: 'All', id: 1 },
     {
       value: TaskFilterFlags.ACTIVE,
@@ -15,12 +15,10 @@ export default class App extends React.Component<unknown, unknown> {
     },
     { value: TaskFilterFlags.COMPLETED, checked: false, label: 'Completed', id: 3 },
   ];
-
-  render() {
-    return (
-      <div className="App">
-        <TodoApp filters={this.filters} />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="App">
+      <TodoApp filters={filters} />
+    </div>
+  );
+};
+export default App;

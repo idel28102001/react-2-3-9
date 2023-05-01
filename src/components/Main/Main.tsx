@@ -1,5 +1,5 @@
 import './Main.css';
-import React from 'react';
+import React, { FC } from 'react';
 
 import TaskList from '../TaskList';
 import Footer from '../Footer';
@@ -16,13 +16,13 @@ interface MainSectionPropsInterface {
   itemsLeft: number;
 }
 
-export default class Main extends React.Component<MainSectionPropsInterface, unknown> {
-  render() {
-    return (
-      <main className="main">
-        <TaskList refactorFunctions={this.props.refactorFunctions} tasks={this.props.tasks} />
-        <Footer changeTasks={this.props.changeTasks} itemsLeft={this.props.itemsLeft} filters={this.props.filters} />
-      </main>
-    );
-  }
-}
+const Main: FC<MainSectionPropsInterface> = ({ tasks, changeTasks, refactorFunctions, filters, itemsLeft }) => {
+  return (
+    <main className="main">
+      <TaskList refactorFunctions={refactorFunctions} tasks={tasks} />
+      <Footer changeTasks={changeTasks} itemsLeft={itemsLeft} filters={filters} />
+    </main>
+  );
+};
+
+export default Main;

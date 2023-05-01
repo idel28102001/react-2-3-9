@@ -1,34 +1,26 @@
-import React from 'react';
-import { formatDistanceToNow } from 'date-fns';
+import React, { FC, useEffect, useState } from 'react';
 import './CreatedNAgo.css';
+import { formatDistanceToNow } from 'date-fns';
 
 interface CreatedNAgoPropsInterface {
   createdAt: Date;
 }
 
-interface CreatedNAgoState {
-  render: number;
-}
+const CreatedNAgo: FC<CreatedNAgoPropsInterface> = ({ createdAt: createdAtTime }) => {
+  const createdAtFunc = (createdAtTime: Date): string => {
+    return `created ${formatDistanceToNow(createdAtTime)} ago`;
+  };
 
-export default class CreatedNAgo extends React.Component<CreatedNAgoPropsInterface, CreatedNAgoState> {
-  state = { render: 0 };
-  interval = -1 as never as NodeJS.Timer;
+  const [createdAt, setCreatedAt] = useState(createdAtFunc(createdAtTime));
 
-  componentDidMount() {
-    this.interval = setInterval(() => {
-      this.setState((e) => ({ render: e.render + 1 }));
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCreatedAt(() => createdAtFunc(createdAtTime));
     }, 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  createdAt(): string {
-    return `created ${formatDistanceToNow(this.props.createdAt)} ago`;
-  }
-
-  render() {
-    return <span className="description">{this.createdAt()}</span>;
-  }
-}
+    return () => {
+      clearInterval(interval);
+    };
+  }, [createdAtTime]);
+  return <span className="description">{createdAt}</span>;
+};
+export default CreatedNAgo;

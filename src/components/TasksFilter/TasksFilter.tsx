@@ -1,5 +1,5 @@
 import './TasksFilter.css';
-import React from 'react';
+import React, { FC } from 'react';
 
 import TasksFilterItem from '../TasksFilterItem';
 import { FilterTasks, TaskFilters } from '../TasksFilterItem/TasksFilterItem';
@@ -9,18 +9,18 @@ interface TaskFilterPropsInterface {
   filterTasks: FilterTasks;
 }
 
-export default class TasksFilter extends React.Component<TaskFilterPropsInterface, unknown> {
-  render() {
-    return (
-      <ul className="filters">
-        {this.props.filters.map((filter) => {
-          return (
-            <li key={filter.id} className="filters__item">
-              <TasksFilterItem filterTasks={this.props.filterTasks} item={filter} />
-            </li>
-          );
-        })}
-      </ul>
-    );
-  }
-}
+const TasksFilter: FC<TaskFilterPropsInterface> = ({ filterTasks, filters }) => {
+  return (
+    <ul className="filters">
+      {filters.map((filter) => {
+        return (
+          <li key={filter.id} className="filters__item">
+            <TasksFilterItem filterTasks={filterTasks} item={filter} />
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
+
+export default TasksFilter;

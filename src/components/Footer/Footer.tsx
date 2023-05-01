@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import './Footer.css';
 import TasksFilter from '../TasksFilter';
@@ -17,16 +17,16 @@ interface FooterPropsInterface {
   changeTasks: ChangeTasks;
 }
 
-export default class Footer extends React.Component<FooterPropsInterface, unknown> {
-  render() {
-    return (
-      <footer className="footer">
-        <span className="todo-count">{this.props.itemsLeft} items left</span>
-        <TasksFilter filterTasks={this.props.changeTasks.filterTasks} filters={this.props.filters} />
-        <button onClick={this.props.changeTasks.removeCompleted} className="clear-completed">
-          Clear completed
-        </button>
-      </footer>
-    );
-  }
-}
+const Footer: FC<FooterPropsInterface> = ({ filters, itemsLeft, changeTasks }) => {
+  return (
+    <footer className="footer">
+      <span className="todo-count">{itemsLeft} items left</span>
+      <TasksFilter filterTasks={changeTasks.filterTasks} filters={filters} />
+      <button onClick={changeTasks.removeCompleted} className="clear-completed">
+        Clear completed
+      </button>
+    </footer>
+  );
+};
+
+export default Footer;
