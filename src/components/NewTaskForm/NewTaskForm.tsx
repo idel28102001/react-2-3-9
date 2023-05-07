@@ -1,5 +1,5 @@
 import './NewTaskForm.css';
-import React, { FC, useCallback, useRef } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 
 import CreateTask, { TaskPropsInterface } from '../../common/createTask';
 
@@ -10,21 +10,27 @@ interface NewTaskFormPropsInterface {
 }
 
 const NewTaskForm: FC<NewTaskFormPropsInterface> = ({ addTask }) => {
-  const ref = useRef<HTMLInputElement>(null);
-  const addTaskFunc = useCallback((e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (ref.current) {
-      const current = ref.current;
-      if (current.value.trim()) {
-        const newTask: TaskPropsInterface = CreateTask(current.value);
+  const [text, setText] = useState<string>('');
+  const addTaskFunc = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (text.trim()) {
+        const newTask: TaskPropsInterface = CreateTask(text);
         addTask(newTask);
-        current.value = '';
+        setText('');
       }
-    }
-  }, []);
+    },
+    [text]
+  );
   return (
     <form onSubmit={addTaskFunc}>
-      <input ref={ref} className="new-todo" placeholder="What needs to be done?" autoFocus />
+      <input
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        className="new-todo"
+        placeholder="What needs to be done?"
+        autoFocus
+      />
       <input type="submit" className="new-todo-submit" />
     </form>
   );

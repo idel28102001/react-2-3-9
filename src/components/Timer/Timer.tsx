@@ -16,13 +16,14 @@ interface TimerProps {
   timer: TimerInterface;
 }
 
+const calculateTimer = (timer: TimerInterface) => {
+  const { startDiapason, diffInMS, isStopped } = timer;
+  const diapason = isStopped ? diffInMS : differenceInMilliseconds(new Date(), startDiapason);
+  return format(new Date(diapason), 'mm:ss');
+};
+
 const Timer: FC<TimerProps> = ({ timer, updateTimer, id }) => {
   const ref = useRef(-1 as never as NodeJS.Timer);
-  const calculateTimer = (timer: TimerInterface) => {
-    const { startDiapason, diffInMS, isStopped } = timer;
-    const diapason = isStopped ? diffInMS : differenceInMilliseconds(new Date(), startDiapason);
-    return format(new Date(diapason), 'mm:ss');
-  };
   const [currentTime, setCurrentTime] = useState(calculateTimer(timer));
   const turnTimerOn = (timer: TimerInterface, isInit = true) => {
     if (!timer.isStopped && !isInit) return;

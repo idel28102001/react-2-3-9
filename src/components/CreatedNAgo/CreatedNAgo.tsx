@@ -1,21 +1,18 @@
 import React, { FC, useEffect, useState } from 'react';
+
 import './CreatedNAgo.css';
-import { formatDistanceToNow } from 'date-fns';
+import { makeCreatedAtStr } from '../../common/utils';
 
 interface CreatedNAgoPropsInterface {
   createdAt: Date;
 }
 
 const CreatedNAgo: FC<CreatedNAgoPropsInterface> = ({ createdAt: createdAtTime }) => {
-  const createdAtFunc = (createdAtTime: Date): string => {
-    return `created ${formatDistanceToNow(createdAtTime)} ago`;
-  };
-
-  const [createdAt, setCreatedAt] = useState(createdAtFunc(createdAtTime));
+  const [createdAt, setCreatedAt] = useState(makeCreatedAtStr(createdAtTime));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCreatedAt(() => createdAtFunc(createdAtTime));
+      setCreatedAt(() => makeCreatedAtStr(createdAtTime));
     }, 1000);
     return () => {
       clearInterval(interval);
